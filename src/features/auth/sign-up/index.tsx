@@ -1,4 +1,5 @@
-import { Link } from '@tanstack/react-router'
+// src/features/auth/sign-up/index.tsx
+import { Link, useNavigate } from '@tanstack/react-router'
 import {
   Card,
   CardContent,
@@ -9,18 +10,24 @@ import {
 } from '@/components/ui/card'
 import { AuthLayout } from '../auth-layout'
 import { SignUpForm } from './components/sign-up-form'
+import { useSignUp } from './hook'
 
 export function SignUp() {
+  const signUp = useSignUp()
+  const navigate = useNavigate()
+
+  async function handleSubmit(v: { email: string; password: string }) {
+    await signUp.mutateAsync(v)
+    navigate({ to: '/' })
+  }
   return (
     <AuthLayout>
       <Card className='gap-4'>
         <CardHeader>
-          <CardTitle className='text-lg tracking-tight'>
-            Create an account
-          </CardTitle>
+          <CardTitle className='text-lg tracking-tight'>계정 생성</CardTitle>
           <CardDescription>
-            Enter your email and password to create an account. <br />
-            Already have an account?{' '}
+            이메일과 패스워드를 입력해 계정을 생성후 로그인하세요. <br />
+            이미 계정을 가지고 있으십니까 ?{' '}
             <Link
               to='/sign-in'
               className='hover:text-primary underline underline-offset-4'
@@ -30,7 +37,10 @@ export function SignUp() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <SignUpForm />
+          <SignUpForm
+            onSubmitForm={handleSubmit}
+            isSubmitting={signUp.isPending}
+          />
         </CardContent>
         <CardFooter>
           <p className='text-muted-foreground px-8 text-center text-sm'>

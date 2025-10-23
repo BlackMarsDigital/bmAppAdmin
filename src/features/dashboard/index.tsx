@@ -35,9 +35,9 @@ export function Dashboard() {
       {/* ===== Main ===== */}
       <Main>
         <div className='mb-2 flex items-center justify-between space-y-2'>
-          <h1 className='text-2xl font-bold tracking-tight'>Dashboard</h1>
+          <h1 className='text-2xl font-bold tracking-tight'>앱 현황</h1>
           <div className='flex items-center space-x-2'>
-            <Button>Download</Button>
+            <Button>다운로드</Button>
           </div>
         </div>
         <Tabs

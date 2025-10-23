@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -33,35 +32,27 @@ const formSchema = z
     path: ['confirmPassword'],
   })
 
+type Values = z.infer<typeof formSchema>
+
 export function SignUpForm({
   className,
+  onSubmitForm,
+  isSubmitting = false,
   ...props
-}: React.HTMLAttributes<HTMLFormElement>) {
-  const [isLoading, setIsLoading] = useState(false)
-
-  const form = useForm<z.infer<typeof formSchema>>({
+}: React.HTMLAttributes<HTMLFormElement> & {
+  onSubmitForm: (v: { email: string; password: string }) => Promise<void> | void
+  isSubmitting?: boolean
+}) {
+  const form = useForm<Values>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-      confirmPassword: '',
-    },
+    defaultValues: { email: '', password: '', confirmPassword: '' },
   })
-
-  function onSubmit(data: z.infer<typeof formSchema>) {
-    setIsLoading(true)
-    // eslint-disable-next-line no-console
-    console.log(data)
-
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 3000)
-  }
-
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(async (data) => {
+          await onSubmitForm({ email: data.email, password: data.password })
+        })}
         className={cn('grid gap-3', className)}
         {...props}
       >
@@ -104,7 +95,7 @@ export function SignUpForm({
             </FormItem>
           )}
         />
-        <Button className='mt-2' disabled={isLoading}>
+        <Button className='mt-2' disabled={isSubmitting}>
           Create Account
         </Button>
 
@@ -124,7 +115,7 @@ export function SignUpForm({
             variant='outline'
             className='w-full'
             type='button'
-            disabled={isLoading}
+            disabled={isSubmitting}
           >
             <IconGithub className='h-4 w-4' /> GitHub
           </Button>
@@ -132,7 +123,7 @@ export function SignUpForm({
             variant='outline'
             className='w-full'
             type='button'
-            disabled={isLoading}
+            disabled={isSubmitting}
           >
             <IconFacebook className='h-4 w-4' /> Facebook
           </Button>

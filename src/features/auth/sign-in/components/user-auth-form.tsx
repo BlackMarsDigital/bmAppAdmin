@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from '@tanstack/react-router'
+import { ro } from '@faker-js/faker'
 import { Loader2, LogIn } from 'lucide-react'
 import { toast } from 'sonner'
 import { IconFacebook, IconGithub } from '@/assets/brand-icons'
@@ -59,11 +60,11 @@ export function UserAuthForm({
       success: () => {
         setIsLoading(false)
 
-        // Mock successful authentication with expiry computed at success time
+        // 목업 유저  변경필요
         const mockUser = {
-          accountNo: 'ACC001',
+          id: '1',
           email: data.email,
-          role: ['user'],
+          role: 'MANAGER',
           exp: Date.now() + 24 * 60 * 60 * 1000, // 24 hours from now
         }
 
